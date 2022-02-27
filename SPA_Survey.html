@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SPA Survey</title>
+	<link rel="stylesheet" type="text/css" href="SPA_Survey.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	 <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+
+	<div class="btu">
+		<button id="btn1">Add New Item</button>
+		<button id="btn2">View Items</button>
+	</div>
+	<div class="item"></div>
+	<div class ="logo animate__animated animate__zoomIn"><b>CLICK BUTTON TO ADD NEW ITEM</b></div>
+
+
+	<div id="text">
+		<h1>Add Item!</h1>
+		<table border="1">
+			<tr>
+				<td>Initial</td>
+				<td><input id="firstt" type="text" name="initial"></td>
+			</tr>
+			<tr>
+				<td>Name</td>
+				<td><input id="name" type="text" name="name"></td>
+			</tr>
+			<tr>
+				<td>DOB</td>
+				<td><input type="date" name="date"></td>
+			</tr>
+			<tr>
+				<td>Work</td>
+				<td><input type="radio" name="work"> Bussiness<br>
+				<input type="radio" name="work"> Salaried<br>
+				<input type="radio" name="work"> Both</td>
+			</tr>
+			<tr>
+				<td>Anual Income</td>
+				<td><input type="text" name="income" id="income"></td>
+			</tr>
+			
+			<tr>
+				<td>Having Life Insurance</td>
+				<td><input type="radio" name="work"> Yes<br>
+				<input type="radio" name="work"> No</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Why No Insurance<br>
+				<input type="text" name="Insurance" id="why"><br>
+				When to plan Insurance<br>
+				<input type="text" name="Insurance" id="when"></td>
+			</tr>
+			<tr>
+				<td>City</td>
+				<td><input id="city" type="text" name="city"></td>
+			</tr>
+			<tr>
+				<td>Mobile</td>
+				<td><input id="mobile" type="text" name="num"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<button id="save" onclick = "managedata()" >Save</button>
+				</td>
+			</tr>
+		</table>
+	</div>	
+
+	<div id="text1">
+		<h1 id="head">List of Items</h1>
+		<table id="root" border="1">
+			<tr id="a1">
+				<th>Initial</th>
+				<th>Name</th>
+				<th>City</th>
+				<th>Mobile</th>
+				<th>Edit</th>
+				<th>Delete</th>
+			</tr>
+			<tbody id="item">
+				
+			</tbody>
+		</table>
+	</div>
+
+<!-- script for javascript ------------------------------------------------>
+	<script>
+		id = "no"
+		selectdata()
+		function managedata()
+		{
+			let first = document.getElementById('firstt').value;
+			let name = document.getElementById('name').value;
+			let city = document.getElementById('city').value;
+			let mobile = document.getElementById('mobile').value;
+			let data = [first,name,city,mobile];
+
+			if(id == "no"){
+				let arr = JSON.parse(localStorage.getItem("wife"))
+				if(arr == null)
+				{
+					let arr1 = new Array();
+					arr1.push(data);
+					localStorage.setItem("wife",JSON.stringify(arr1));
+				}
+				else
+				{
+					arr.push(data);
+					localStorage.setItem("wife",JSON.stringify(arr));
+				}
+				document.getElementById('firstt').value = " ";
+				document.getElementById('name').value = " ";
+				document.getElementById('city').value = " ";
+				document.getElementById('mobile').value = " ";
+				document.getElementById('income').value = " ";
+				document.getElementById('why').value = " ";
+				document.getElementById('when').value = " ";
+				selectdata();
+			}
+			else{
+				let arr = JSON.parse(localStorage.getItem("wife"))
+				arr[id] = data;
+				localStorage.setItem("wife",JSON.stringify(arr));
+			}
+			selectdata();
+		}
+
+
+
+		function selectdata()
+		{
+			let arr = JSON.parse(localStorage.getItem("wife"));
+			html = "";
+			for(let k in arr)
+				{
+					html += `<tr><td>${arr[k][0]}</td><td>${arr[k][1]}</td><td>${arr[k][2]}</td><td>${arr[k][3]}</td><td><a href="javascript:void(0)" onclick = "editdata(${k})" class = "edittt">edit</a></td><td><a href="javascript:void(0)" onclick = "deletedata(${k})" class = "delll">delete</a></td></tr>`
+				}
+			document.getElementById("item").innerHTML = html;
+
+		}
+
+
+		function editdata(k)
+		{
+			let arr = JSON.parse(localStorage.getItem("wife"));
+			document.getElementById("firstt").value=arr[k][0];
+			document.getElementById("name").value=arr[k][1];
+			document.getElementById("city").value=arr[k][2];
+			document.getElementById("mobile").value=arr[k][3];
+			id=k;
+			$("#text").fadeIn(1000);
+			$("#text1").hide();
+			
+		}
+
+
+		function deletedata(k)
+		{
+			let arr = JSON.parse(localStorage.getItem("wife"));
+			arr.splice(k,1);
+			localStorage.setItem("wife",JSON.stringify(arr));
+			selectdata();
+
+		}
+	
+	</script>
+
+
+
+
+<!-- script for jquery ---------------------------------------------------->
+	<script>
+		
+		$("document").ready(function(){
+			$("#btn1").click(function(){
+				$("#text").fadeIn(1000);
+				$("#text1").hide();
+				$(".logo").hide();
+				$(".item").hide();
+			})
+			$("#btn2").click(function(){
+				$("#text1").fadeIn(1000);
+				$("#text").hide();
+				$(".logo").hide();
+				$(".item").hide();
+			})
+			$("#save").click(function(){
+				$("#text1").fadeIn(1000);
+				$("#text").hide();
+			})			
+		})
+		
+	</script>			
+</body>
+</html>
